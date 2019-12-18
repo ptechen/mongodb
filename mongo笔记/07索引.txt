@@ -1,0 +1,18 @@
+索引
+1.查看执行计划
+db.user_info.find({"age":{ $lt: 30 }})
+db.user_info.find({"age":{ $lt: 30 }}).explain()
+
+2.创建索引
+db.user_info.createIndex( { age: 1 },{background: true} )
+
+3.查看索引
+db.user_info.getIndexes()
+
+4.再次查看执行计划
+db.user_info.find({"age":{ $lt: 30 }}).explain()
+
+关键词
+"stage" : "IXSCAN"
+"indexName" : "age_1"
+

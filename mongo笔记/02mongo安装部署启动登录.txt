@@ -1,0 +1,77 @@
+﻿第一章 安装mongodb
+1.规划目录
+#软件所在目录
+/opt/mongodb 
+
+#单节点目录
+/opt/mongo_27017/{conf,log,pid}
+
+#数据目录
+/data/mongo_27017
+
+2.下载并解压
+yum install libcurl openssl -y
+上传软件
+tar zxf mongodb-linux-x86_64-3.6.13.tgz -C /opt/
+cd /opt/
+ln -s mongodb-linux-x86_64-3.6.13 mongodb
+
+3.创建文件目录以及数据目录
+mkdir -p /opt/mongo_27017/{conf,log,pid}
+mv /data /data_bak
+mkdir -p /data/mongo_27017 
+
+第二章 配置启动mongo
+1.创建配置文件
+cat > /opt/mongo_27017/conf/mongodb.conf<< EOF
+systemLog:
+  destination: file   
+  logAppend: true  
+  path: /opt/mongo_27017/log/mongodb.log
+
+storage:
+  journal:
+    enabled: true
+  dbPath: /data/mongo_27017
+  directoryPerDB: true
+  wiredTiger:
+     engineConfig:
+        cacheSizeGB: 1
+        directoryForIndexes: true
+     collectionConfig:
+        blockCompressor: zlib
+     indexConfig:
+        prefixCompression: true
+
+processManagement:
+  fork: true
+  pidFilePath: /opt/mongo_27017/pid/mongod.pid
+
+net:
+  port: 27017
+  bindIp: 127.0.0.1,10.0.0.51
+EOF
+
+2.启动mongo
+/opt/mongodb/bin/mongod -f /opt/mongo_27017/conf/mongodb.conf
+
+3.检查是否启动
+netstat -lntup|grep 27017
+
+
+第三章 配置登录mongo
+1.写入环境变量
+echo "export PATH=/opt/mongodb/bin:\$PATH" >> /etc/profile
+source /etc/profile
+2.登录
+mongo
+
+3.关闭
+方法1：
+使用localhost登录
+mongo localhost:27017
+use admin
+db.shutdownServer()
+
+方法2：
+mongod -f /opt/mongo_27017/conf/mongodb.conf --shutdown

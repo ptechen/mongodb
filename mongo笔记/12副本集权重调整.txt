@@ -1,0 +1,20 @@
+副本集权重调整
+0.模拟故障转移
+mongod -f /opt/mongo_28017/conf/mongo_28017.conf --shutdown
+mongod -f /opt/mongo_28017/conf/mongo_28017.conf
+
+1.查看当前副本集配置
+rs.conf()
+
+2.设置权重
+config=rs.conf()
+config.members[0].priority=100
+rs.reconfig(config)
+
+3.主节点主动降级
+rs.stepDown()
+
+4.恢复成默认的权重
+config=rs.conf()
+config.members[0].priority=1
+rs.reconfig(config)

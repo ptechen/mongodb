@@ -1,0 +1,74 @@
+﻿第一章 优化告警
+1.报警内容1：内存不足
+
+解决方法：
+==============
+1.添加内存
+2.调整配置文件里的cache大小
+==============
+
+2.报警内容2：配置访问控制参数
+WARNING: Access control is not enabled for the database.
+Read and write access to data and configuration is unrestricted.
+
+解决方法：
+==============
+
+==============
+
+
+3.报警内容3：不是以普通用户启动
+WARNING: You are running this process as the root user, which is not recommended.
+
+解决方法：
+==============
+mongod -f /opt/mongo_27017/conf/mongodb.conf --shutdown
+useradd mongo
+echo '123456'|passwd --stdin mongo
+chown -R mongo:mongo /opt/
+chown -R mongo:mongo /data/
+su - mongo
+mongod -f /opt/mongo_27017/conf/mongodb.conf 
+mongo
+==============
+
+
+4.报警内容4：
+WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+we suggest setting it to 'never'
+WARNING: /sys/kernel/mm/transparent_hugepage/defrag is 'always'.
+We suggest setting it to 'never'
+
+解决方法：
+==============
+1.临时解决
+echo "never" > /sys/kernel/mm/transparent_hugepage/enabled
+echo "never" > /sys/kernel/mm/transparent_hugepage/defrag
+mongod -f /opt/mongo_27017/conf/mongodb.conf --shutdown
+mongod -f /opt/mongo_27017/conf/mongodb.conf
+mongo
+
+2.写入开机自启动
+chmod +x /etc/rc.d/rc.local
+vim /etc/rc.d/rc.local
+echo "never" > /sys/kernel/mm/transparent_hugepage/enabled
+echo "never" > /sys/kernel/mm/transparent_hugepage/defrag
+==============
+
+5.报警内容5：
+WARNING: soft rlimits too low. rlimits set to 31771 processes, 65535 files. Number of processes should be at least 32767.5 : 0.5 times number of files.
+
+解决方法:
+==============
+写入配置文件:
+vim /etc/profile
+ulimit -f unlimited
+ulimit -t unlimited
+ulimit -v unlimited
+ulimit -n 64000
+ulimit -m unlimited
+ulimit -u 64000
+
+生效配置:
+source /etc/profile
+==============

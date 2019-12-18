@@ -1,0 +1,21 @@
+增加新节点和删除旧节点
+
+1.创建新节点并启动
+mkdir -p /opt/mongo_28010/{conf,log,pid}
+mkdir -p /data/mongo_28010
+cp /opt/mongo_28017/conf/mongo_28017.conf /opt/mongo_28010/conf/mongo_28010.conf
+sed -i 's#28017#28010#g' /opt/mongo_28010/conf/mongo_28010.conf
+mongod -f /opt/mongo_28010/conf/mongo_28010.conf
+mongo db01:28010
+
+2.集群添加节点
+mongo db01:28017
+use admin
+rs.add("db01:28010")
+
+3.新节点查看信息
+mongo db01:28010
+ 
+3.删除节点
+rs.remove("db01:28010")
+rs.remove("db01:28011")

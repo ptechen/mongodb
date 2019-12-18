@@ -1,0 +1,10 @@
+﻿删除
+
+1.先查找需要删除的数据
+db.inventory.find({"status":"p"})
+
+2.删除单条
+db.inventory.deleteOne({"status":"p"})
+
+3.删除多个
+db.inventory.deleteMany({"status":"P"})

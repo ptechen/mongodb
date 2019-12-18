@@ -1,0 +1,42 @@
+mongo备份与恢复
+
+1.工具介绍
+（1）mongoexport/mongoimport
+（2）mongodump/mongorestore
+
+2.应用场景
+1.异构平台迁移  mysql <---> mongodb
+2.同平台，跨大版本：mongodb 2  ----> mongodb 3
+mongoexport/mongoimport:json csv
+
+日常备份恢复时使用.
+mongodump/mongorestore
+
+
+3.导出工具mongoexport
+单表备份
+mongoexport --port 28017 -d test -c inventory -o /data/inventory.json
+                    
+单表备份至csv格式   
+mongoexport --port 28017 -d test -c user_info --type=csv -f name,age,ad -o /data/user_info.csv
+                    
+                    
+4.恢复              
+mongoimport --port 28017 -d test -c inventory /data/inventory.json
+mongoimport --port 28017 -d test -c user_info --type=csv --headerline --file  /data/user_info.csv
+
+5.mysql数据迁移到mongo
+select * from world.city into outfile '/tmp/city.csv' fields terminated by ',';
+编辑csv文件,添加列名
+ID,Name,CountryCode,District,Population
+
+mongoimport --port 27017 -d world -c city --type=csv --headerline --file  /data/city.csv
+mongoexport --port 27017 -d world -c city -o /data/city.json
+
+
+6.导出与恢复
+mongodump  --port 27017 -o /data/backup
+mongorestore --port 27017 -d world  /data/backup/world/ --drop
+mongorestore --port 27017 /data/backup/ --drop
+
+

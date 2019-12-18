@@ -1,0 +1,33 @@
+更新数据
+1.更改匹配条件的单条数据
+db.inventory.find({ "item" : "paper" })
+db.inventory.updateOne(
+    { "item" : "paper" },
+    {
+      $set: {  
+				"size.uom" : "cm",  
+				"status" : "P" 
+			}
+    }
+)
+
+2.更改匹配条件的多条数据
+db.inventory.find({ "qty" : { $lt: 50 } })
+db.inventory.updateMany(
+    { "qty" : { $lt: 50 } },
+    {
+       $set: 
+			{ 
+				"size.uom" : "mm", 
+				"status": "P" 
+			}
+    }
+)
+
+
+
+
+
+
+
+

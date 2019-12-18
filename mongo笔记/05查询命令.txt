@@ -1,0 +1,59 @@
+查询命令
+
+1.查询一条
+db.user_info.findOne()
+
+2.查询所有
+db.user_info.find()
+
+3.查询符合条件
+db.user_info.find({"age":28})
+select * from user_info where age = 28;
+
+4.查询嵌套的条件
+db.inventory.find( { "size.uom": "in" } )
+db.inventory.find( 
+	{ 
+		"size.uom": "in" 
+	} 
+)
+
+5.逻辑查询：and
+db.inventory.find( { "size.uom": "cm" ,"status" : "A"} )
+db.inventory.find( 
+	{ 
+		"size.uom": "cm" ,
+		"status" : "A"
+	} 
+)
+
+6.逻辑查询 或
+db.inventory.find( 
+	{ 
+		$or: [ 
+				{ status: "A" }, 
+				{ qty: { $lt: 30 } } 
+			 ] 
+	} 
+)
+
+7.逻辑查询+或+and+正则表达式
+db.inventory.find( 
+	{
+		status: "A",
+		$or: [ 
+				{ qty: { $lt: 30 } }, 
+				{ item: /^p/ } 
+			 ]
+	} 
+)
+
+db.inventory.find( 
+	{
+		status: "A",
+		$or: [ 
+				{ qty: { $gt: 30 } }, 
+				{ item: /^p/ } 
+			 ]
+	} 
+)

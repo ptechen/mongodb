@@ -1,0 +1,45 @@
+准备测试数据
+use backup 
+db.backup.insertMany( [
+    { "id": 1},
+    { "id": 2},
+	{ "id": 3},
+]);
+
+全备环境
+rm -rf /data/backup/*
+mongodump --port 28017 --oplog -o /data/backup
+
+增加新数据 s
+mongo db01:28017
+use backup 
+db.backup.insertMany( [
+    { "id": 4},
+    { "id": 5},
+	{ "id": 6},
+]);
+
+模拟删除集合
+mongo db01:28017
+use backup 
+db.backup.drop()
+
+备份oplog
+mongodump --port 28017 -d local -c oplog.rs  -o /data/backup
+
+查找误操作时间点
+use local 
+db.oplog.rs.find({ns:"backup.$cmd"}).pretty();
+
+找到时间点信息
+"ts" : Timestamp(1575096322, 1),
+
+
+恢复数据
+cd /data/backup/local/
+cp oplog.rs.bson ../oplog.bson
+rm -rf /data/backup/local/
+mongorestore --port 28017 --oplogReplay --oplogLimit "1575096322:1" --drop  /data/backup/
+
+
+

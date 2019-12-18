@@ -1,0 +1,32 @@
+第二章 查看指令
+test:登录时默认存在的库
+admin库:系统预留库,MongoDB系统管理库
+local库:本地预留库,存储关键日志
+config库:MongoDB配置信息库
+
+查看数据库命令
+show databases/show dbs
+show tables/show collections
+use admin
+db/select database()
+
+第三章 插入命令
+1.插入单条
+db.user_info.insert({"name":"zhangya","age":27,"ad":"北京市朝阳区"})
+db.user_info.insert({"name":"zhangya","age":27,"ad":"北京市朝阳区"})
+db.user_info.insert({"name":"yazhang","age":28,"ad":"北京市朝阳区"})
+db.user_info.insert({"name":"xiaozhang","age":28,"ad":"北京市朝阳区"})
+db.user_info.insert({"name":"xiaozhang","age":28,"ad":"北京市朝阳区","sex":"boy"})
+
+
+2.插入多条
+db.inventory.insertMany( 
+	[
+		{ "item": "journal", "qty": 25, "size": { "h": 14, "w": 21, "uom": "cm" }, "status": "A" },
+		{ "item": "notebook", "qty": 50, "size": { "h": 8.5, "w": 11, "uom": "in" }, "status": "A" },
+		{ "item": "paper", "qty": 100, "size": { "h": 8.5, "w": 11, "uom": "in" }, "status": "D" },
+		{ "item": "planner", "qty": 75, "size": { "h": 22.85, "w": 30, "uom": "cm" }, "status": "D" },
+		{ "item": "postcard", "qty": 45, "size": { "h": 10, "w": 15.25, "uom": "cm" }, "status": "A" }
+	]
+);
+ 
